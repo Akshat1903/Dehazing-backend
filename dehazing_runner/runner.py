@@ -3,6 +3,8 @@ import cv2
 import pyrebase
 from django.conf import settings
 import os
+from celery import shared_task
+from celery.utils.log import get_task_logger
 
 class Node(object):
     def __init__(self, x, y, value):
@@ -241,6 +243,12 @@ def clean_directory_video():
     if os.path.isfile(dehazed2imagePath):
         os.remove(dehazed2imagePath)
 
+
+
+logger = get_task_logger(__name__)
+
+
+@shared_task(name="processImage")
 def main_runner():
     clean_directory_video()
     firebaseConfig = {
@@ -248,7 +256,7 @@ def main_runner():
     "authDomain": "dehazing-app-d1ab2.firebaseapp.com",
     "projectId": "dehazing-app-d1ab2",
     "storageBucket": "dehazing-app-d1ab2.appspot.com",
-    "databaseURL":"",
+    "databaseURL":"https://dehazing-app-d1ab2-default-rtdb.firebaseio.com/",
     "messagingSenderId": "735272100145",
     "appId": "1:735272100145:web:bf6cea9c461c82e2b91010",
     "measurementId": "G-D4VWFTX75N",
@@ -257,6 +265,9 @@ def main_runner():
     firebase = pyrebase.initialize_app(firebaseConfig)
 
     storage = firebase.storage()
+    database = firebase.database()
+    database.child("image").child("status").set("Processing Started")
+
     file_name = "test.jpg"
     storage.child(file_name).download(imagePath)
 
@@ -266,8 +277,26 @@ def main_runner():
     dehazed_img2 = getRecoverScene(img, refine=False)
     cv2.imwrite(dehazed1imagePath,dehazed_img2)
     cv2.imwrite(dehazed2imagePath,dehazed_img1)
-    storage.delete("test.jpg")
+
+    files = storage.list_files()
+    all_files = []
+    for file in files:
+        all_files.append(file.name)
+
+    if "test.jpg" in all_files:
+        storage.delete("test.jpg")
+    if "dehazed1.jpg" in all_files:
+        storage.delete("dehazed1.jpg")
+    if "dehazed2.jpg" in all_files:
+        storage.delete("dehazed2.jpg")
+    
     storage.child("dehazed1.jpg").put(dehazed1imagePath)
     storage.child("dehazed2.jpg").put(dehazed2imagePath)
+    dehazed1Url = storage.child("dehazed1.jpg").get_url(token=None)
+    dehazed2Url = storage.child("dehazed2.jpg").get_url(token=None)
+    database.child("image").child("dehazed1url").set(dehazed1Url)
+    database.child("image").child("dehazed2url").set(dehazed2Url)
+    database.child("image").child("status").set("Processing Completed")
+    logger.info("Video Processed")
     clean_directory_video()
    

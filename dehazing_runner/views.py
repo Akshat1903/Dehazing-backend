@@ -9,7 +9,7 @@ class CallImageProcessing(APIView):
 
     def get(self, request):
         if request.method == 'GET':
-            runner.main_runner()
+            runner.main_runner.delay()
 
             response = {
                 'status': "Image Analysis Completed",

@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!6ahhgp5&tum0tu(#hq_lzl2qbn%eqsxq9d(5ioh_4%q!fv3&7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['dehazing-app.herokuapp.com']
+ALLOWED_HOSTS = ['dehazing-app.herokuapp.com','127.0.0.1']
 
 
 # Application definition
@@ -125,5 +125,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+CELERY_BROKER_URL = "amqps://hwfzsbuw:4kE17VZeKY8obdxMr8ZQGkgoMQFLmycr@baboon.rmq.cloudamqp.com/hwfzsbuw"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
