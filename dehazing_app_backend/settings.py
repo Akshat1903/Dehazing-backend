@@ -126,6 +126,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
-CELERY_BROKER_URL = "amqps://hwfzsbuw:4kE17VZeKY8obdxMr8ZQGkgoMQFLmycr@baboon.rmq.cloudamqp.com/hwfzsbuw"
+CELERY_BROKER_URL = "amqps://upufutdr:JqVKVvUFlx-wgVX6nn3Xe-EcMSLIqOt7@shark.rmq.cloudamqp.com/upufutdr"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
