@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-!6ahhgp5&tum0tu(#hq_lzl2qbn%eqsxq9d(5ioh_4%q!fv3&7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['dehazing-app.herokuapp.com','127.0.0.1']
+ALLOWED_HOSTS = ['akshat-dehazing-api.herokuapp.com','127.0.0.1']
 
 
 # Application definition
